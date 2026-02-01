@@ -13,9 +13,10 @@
   z-index: -2;
   background-size: cover;
   background-position: center;
-  transition: opacity 2s ease;
+  transition: opacity 2.5s ease;
   opacity: 0;
 }
+
 .bg.active {
   opacity: 1;
 }
@@ -24,7 +25,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 40, 25, 0.7);
+  background: rgba(8, 40, 25, 0.65);
   z-index: -1;
 }
 
@@ -36,7 +37,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #e7f5ee;
+  color: #ffffff;
   overflow: hidden;
 }
 
@@ -57,6 +58,7 @@ h1 {
   justify-content: center;
 }
 
+/* ===== BUTTONS ===== */
 .btn {
   position: relative;
   width: 120px;
@@ -74,14 +76,17 @@ h1 {
   object-fit: cover;
 }
 
+/* ===== LABELS (BIAŁE, BEZ TŁA) ===== */
 .label {
   position: absolute;
-  bottom: 0;
+  bottom: 6px;
   width: 100%;
-  background: rgba(0,0,0,0.45);
-  padding: 6px 0;
-  font-size: 14px;
-  letter-spacing: 1px;
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  pointer-events: none;
 }
 
 /* ===== MESSAGE ===== */
@@ -91,6 +96,7 @@ h1 {
   opacity: 0;
   transition: opacity 1s ease;
 }
+
 .message.show {
   opacity: 1;
 }
@@ -104,6 +110,7 @@ h1 {
   top: -10px;
   animation: fall 3s linear forwards;
 }
+
 @keyframes fall {
   to {
     transform: translateY(110vh) rotate(720deg);
@@ -115,7 +122,7 @@ h1 {
 
 <body>
 
-<!-- BACKGROUND LAYERS -->
+<!-- BACKGROUND -->
 <div id="bg1" class="bg active"></div>
 <div id="bg2" class="bg"></div>
 <div class="overlay"></div>
@@ -125,12 +132,12 @@ h1 {
 
   <div class="buttons">
     <a id="yesLink" href="#" class="btn">
-      <img src="images/yes.jpg">
+      <img src="images/yes.jpg" alt="Tak">
       <div class="label">TAK</div>
     </a>
 
     <div id="no" class="btn">
-      <img src="images/no.jpg">
+      <img src="images/no.jpg" alt="Nie">
       <div class="label">NIE</div>
     </div>
   </div>
@@ -146,28 +153,31 @@ h1 {
 
 <script>
 /* ===== SLIDESHOW ===== */
-const totalImages = 23;
+const TOTAL_IMAGES = 12;
 let current = 1;
-let activeBg = 1;
+let active = 1;
 
 const bg1 = document.getElementById("bg1");
 const bg2 = document.getElementById("bg2");
 
-bg1.style.backgroundImage = `url('gallery/1.jpg')`;
+// INIT – pierwsze zdjęcie
+bg1.style.backgroundImage = "url('gallery/1.jpeg')";
+bg1.classList.add("active");
 
 setInterval(() => {
-  current = current % totalImages + 1;
-  const nextBg = activeBg === 1 ? bg2 : bg1;
-  const prevBg = activeBg === 1 ? bg1 : bg2;
+  current = current % TOTAL_IMAGES + 1;
 
-  nextBg.style.backgroundImage = `url('gallery/${current}.jpg')`;
-  nextBg.classList.add("active");
-  prevBg.classList.remove("active");
+  const next = active === 1 ? bg2 : bg1;
+  const prev = active === 1 ? bg1 : bg2;
 
-  activeBg = activeBg === 1 ? 2 : 1;
-}, 6000); // zmiana co 6 sekund
+  next.style.backgroundImage = `url('gallery/${current}.jpeg')`;
+  next.classList.add("active");
+  prev.classList.remove("active");
 
-/* ===== INTERACTIONS ===== */
+  active = active === 1 ? 2 : 1;
+}, 6000);
+
+/* ===== INTERAKCJE ===== */
 const yesLink = document.getElementById("yesLink");
 const noBtn = document.getElementById("no");
 const msg = document.getElementById("message");
@@ -205,6 +215,7 @@ yesLink.addEventListener("click", (e) => {
   }
 });
 
+/* ===== CONFETTI ===== */
 function launchConfetti() {
   for (let i = 0; i < 80; i++) {
     const c = document.createElement("div");
