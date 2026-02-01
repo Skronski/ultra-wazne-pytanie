@@ -97,12 +97,11 @@ h1 {
   font-size: 22px;
   min-height: 3em;
   white-space: pre-line;
-  z-index: 9999; /* zawsze na wierzchu */
+  z-index: 9999; /* zawsze nad wszystkim */
   text-align: center;
   pointer-events: none;
-  background: rgba(0,0,0,0.4);
-  padding: 10px 20px;
-  border-radius: 12px;
+  color: #ffffff; /* czysty tekst, bez tła */
+  display: none; /* niewidoczny do kliknięcia TAK */
 }
 
 /* ===== TYPEWRITER ===== */
@@ -196,6 +195,7 @@ setInterval(() => {
 const yesLink = document.getElementById("yesLink");
 const noBtn = document.getElementById("no");
 const voice = document.getElementById("voice");
+const messageEl = document.getElementById("message");
 
 let scale = 1;
 
@@ -234,6 +234,11 @@ function typeText(text, speed = 45) {
 }
 
 yesLink.addEventListener("click", (e) => {
+  e.preventDefault(); // aby nie zmieniało href jeśli brak numeru
+
+  // pokazanie komunikatu
+  messageEl.style.display = "block";
+
   launchConfetti();
   voice.play().catch(()=>{});
 
@@ -243,8 +248,7 @@ yesLink.addEventListener("click", (e) => {
 
   if (typeof PHONE_NUMBER !== "undefined") {
     yesLink.href = `tel:${PHONE_NUMBER}`;
-  } else {
-    e.preventDefault();
+    window.location.href = yesLink.href; // wykonanie po numerze
   }
 });
 
